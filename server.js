@@ -6,7 +6,9 @@ module.exports = () => {
   app.set('view engine', 'ejs');
   
   app.get("/", (req, res) => {
-    res.render('pages/index');
+    res.render('pages/index', {
+      name: 'Bumper Buddy'
+    });
   });
   
   app.listen(port, () => {
