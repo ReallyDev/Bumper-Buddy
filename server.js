@@ -1,9 +1,12 @@
-module.export = () => {
-  const express = require("express"); const app = express();
+module.exports = () => {
+  const express = require("express");
+  const app = express();
   const port = 3000;
+
+  app.set('view engine', 'ejs');
   
   app.get("/", (req, res) => {
-    res.send("Real_IceyDev#3339 & Ghex#7338 | Hosting service is responding!");
+    res.render('pages/index');
   });
   
   app.listen(port, () => {
@@ -14,5 +17,5 @@ module.export = () => {
 /**
 Coded by: Real_IceyDev & Ghex
 License: Attribution-NonCommercial-ShareAlike 4.0 International
-Name Later
+Bumper Buddy
 */

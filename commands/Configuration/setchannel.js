@@ -26,7 +26,8 @@ module.exports = {
     {
       name: "channel",
       description: "the bump channel",
-      type: "INTEGER",
+      type: "CHANNEL",
+      channelTypes: [0], // Only allow text channels
       required: true,
     },
   ],
@@ -55,3 +56,9 @@ module.exports = {
     }
   }
 }
+
+/**
+Coded by: Real_IceyDev & Ghex
+License: Attribution-NonCommercial-ShareAlike 4.0 International
+Bumper Buddy
+*/
