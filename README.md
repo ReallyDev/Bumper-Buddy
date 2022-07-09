@@ -1,2 +1,3 @@
-# Bumper-Buddy
-Will come up with later.
+<h1 align="center">Bumper Buddy</h1>
+
+An amazing bump bot!
