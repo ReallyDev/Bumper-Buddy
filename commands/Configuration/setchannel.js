@@ -26,7 +26,7 @@ module.exports = {
     {
       name: "channel",
       description: "the bump channel",
-      type: "CHANNEL",
+      type: "INTEGER",
       required: true,
     },
   ],
