@@ -7,12 +7,13 @@ module.exports = () => {
   
   app.get("/", (req, res) => {
     res.render('pages/index', {
-      name: 'Bumper Buddy'
+      name: 'Bumper Buddy',
+      message: 'Real_IceyDev#3339 & Ghex#7338 | Hosting service is responding!'
     });
   });
   
   app.listen(port, () => {
-   console.log(`Hosting service is listening! Port: ${port}`);
+   console.log(`Hosting service is listening to port: ${port}`);
   });
 }
 

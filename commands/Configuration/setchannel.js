@@ -40,7 +40,7 @@ module.exports = {
   */
   async run(w, e, r, t) {
     try {
-      return q.readFile(".././config/data.json", "utf8", function(err, data) {
+      return q.readFile("../../config/data.json", "utf8", function(err, data) {
         if (err) throw err
   
         let y = eval(data) // y is now a plain JSON object

@@ -12,7 +12,7 @@ client.on("interactionCreate", async (interaction) => {
       .catch((e) => {});
     let prefix = "/";
     const cmd = client.commands.get(interaction.commandName);
-    if (!cmd) return interaction.followUp({ content: "An error has occured " });
+    if (!cmd) return interaction.editReply("An error has occured");
 
     const args = [];
 
@@ -27,33 +27,34 @@ client.on("interactionCreate", async (interaction) => {
     interaction.member = interaction.guild.members.cache.get(
       interaction.user.id
     );
-    if (cmd) {
-      // checking user perms
-      if (!interaction.member.permissions.has(cmd.userPermissions || [])) {
-        return client.embed(
+    
+    // checking user perms
+    if (!interaction.member.permissions.has(cmd.userPermissions || [])) {
+      return client.embed(
+        interaction,
+        `You Don't Have \`${cmd.userPermissions}\` Permission to Use \`${cmd.name}\` Command!!`
+      );
+    } else if (!interaction.guild.me.permissions.has(cmd.botPermissions || [])) {
+      return client.embed(
+        interaction,
+        `I Don't Have \`${cmd.botPermissions}\` Permission to Use \`${cmd.name}\` Command!!`
+      );
+    } else if (cooldown(interaction, cmd)) {
+      return client.embed(
+        interaction,
+        ` You are On Cooldown , wait \`${cooldown(
           interaction,
-          `You Don't Have \`${cmd.userPermissions}\` Permission to Use \`${cmd.name}\` Command!!`
-        );
-      } else if (
-        !interaction.guild.me.permissions.has(cmd.botPermissions || [])
-      ) {
-        return client.embed(
-          interaction,
-          `I Don't Have \`${cmd.botPermissions}\` Permission to Use \`${cmd.name}\` Command!!`
-        );
-      } else if (cooldown(interaction, cmd)) {
-        return client.embed(
-          interaction,
-          ` You are On Cooldown , wait \`${cooldown(
-            interaction,
-            cmd
-          ).toFixed()}\` Seconds`
-        );
-      } else {
-        cmd.run({ client, interaction, args, prefix });
-      }
+          cmd
+        ).toFixed()}\` Seconds`
+      );
+    } else {
+      cmd.run({ client, interaction, args, prefix }).catch(err => {
+        if (interaction.deferred && !interaction.replied) {
+          interaction.editReply('An error occured');
+        }
+      });
     }
-  }
+}
 
   // Context Menu Handling
   if (interaction.isContextMenu()) {
