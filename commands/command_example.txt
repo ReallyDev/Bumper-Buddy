@@ -1,0 +1,22 @@
+const { Command } = require("reconlx");
+const ee = require("../../settings/embed.json");
+
+module.exports = new Command({
+  // options
+  name: "",
+  description: ``,
+  userPermissions: [],
+  botPermissions: [],
+  category: "",
+  cooldown: 10,
+  // command start
+  run: async ({ client, interaction, args, prefix }) => {
+    // Code
+  },
+});
+
+/**
+Coded by: Real_IceyDev & Ghex
+License: Attribution-NonCommercial-ShareAlike 4.0 International
+Name Later
+*/
