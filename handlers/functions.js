@@ -8,7 +8,6 @@ const {
   Client,
 } = require("discord.js");
 const ee = require("../config/embed.json");
-const { Song, Queue } = require("distube");
 const client = require("../index");
 
 function cooldown(interaction, cmd) {
@@ -194,36 +193,6 @@ async function swap_pages(client, interaction, embeds) {
   }
 }
 
-function check_dj(client, member, song) {
-  //if no message added return
-  if (!client) return false;
-  //get the adminroles
-  var roleid = client.settings.get(member.guild.id, "djroles");
-  let djonly = client.settings.get(member.guild.id, "djonly");
-  //if no dj roles return false, so that it continues
-  if (String(roleid) == "") return false;
-
-  //define variables
-  var isdj = false;
-  //loop through the roles
-  for (let i = 0; i < roleid.length; i++) {
-    //if the role does not exist, then skip this current loop run
-    if (!member.guild.roles.cache.get(roleid[i])) continue;
-    //if he has role set var to true
-    if (member.roles.cache.has(roleid[i])) isdj = true;
-    //add the role to the string
-  }
-  //if no dj and not an admin, return the string
-  if (
-    !isdj &&
-    !member.permissions.has("ADMINISTRATOR") &&
-    song.user.id != member.id
-  )
-    return roleid.map((i) => `<@&${i}>`).join(", ");
-  //if he is a dj or admin, then return false, which will continue the cmd
-  else return false;
-}
-
 function parseDuration(duration) {
   let remain = duration;
   let days = Math.floor(remain / (1000 * 60 * 60 * 24));
@@ -295,55 +264,13 @@ function duration(duration, useMilli = false) {
   return formatTime(time, useMilli);
 }
 
-function createBar(queue) {
-  try {
-    let length = 15;
-    let index = Math.round(
-      (queue.currentTime / queue.songs[0].duration) * length
-    );
-    let indicator = "🔘";
-    let line = "▬";
-    if (index >= 1 && index <= length) {
-      let bar = line.repeat(length - 1).split("");
-      bar.splice(index, 0, indicator);
-      let timestamp = queue.formattedCurrentTime;
-      return `\`${timestamp}\` | ${bar.join("")} | \`${
-        queue.songs[0].formattedDuration
-      }\``;
-      // return `${bar.join("")}`;
-    } else {
-      return `${indicator}${line.repeat(length - 1)}`;
-    }
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-function shuffle(a) {
-  try {
-    var j, x, i;
-    for (i = a.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1));
-      x = a[i];
-      a[i] = a[j];
-      a[j] = x;
-    }
-    return a;
-  } catch (e) {
-    console.log(String(e.stack));
-  }
-}
-
 module.exports = {
   cooldown,
   databasing,
   swap_pages,
-  check_dj,
   parseDuration,
   formatTime,
   duration,
-  createBar,
-  shuffle,
 };
 
 /**

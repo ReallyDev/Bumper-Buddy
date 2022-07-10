@@ -1,5 +1,6 @@
 const { Client, Collection, Intents } = require('discord.js');
 const fs = require('fs');
+const chalk = require('chalk');
 const client = new Client({
   messageCacheLifetime: 60,
   fetchAllMembers: false,
@@ -30,6 +31,8 @@ const client = new Client({
   ],
 });
 module.exports = client;
+
+console.log(chalk.bold.blue("Starting bot..."));
 
 //Global Variables.
 client.events = new Collection();
