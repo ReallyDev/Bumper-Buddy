@@ -1,7 +1,7 @@
 const ee = require(`${process.cwd()}/config/embed.json`);
 const { MessageEmbed } = require("discord.js");
 const emoji = require(`${process.cwd()}/config/emoji.json`);
-const { duration } = require(`${process.cwd()}/handlers/functions`);
+const ms = require('ms');
 
 module.exports = {
   name: "uptime",
@@ -12,11 +12,14 @@ module.exports = {
   cooldown: 10,
 
   run: async ({ client, interaction, args, prefix }) => {
-    interaction.editReply(
-      `\`\`\`yml\n Uptime :- ${duration(client.uptime)
-        .map((t) => `${t}`)
-        .join(" , ")} \`\`\``
-    );
+    interaction.editReply({
+      embeds: [
+        new MessageEmbed()
+          .setTitle('Uptime')
+          .setColor(ee.color)
+          .setDescription('```md\n'+ ms(client.uptime, { long: true }) +'\n```')
+      ]
+    });
   },
 };
 
