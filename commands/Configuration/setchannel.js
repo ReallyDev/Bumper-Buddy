@@ -1,5 +1,5 @@
+const { ApplicationCommandOptionType, ChannelType, PermissionFlagsBits } = require("discord.js");
 const q = require("fs");
-const { Client, Interaction } = require('discord.js');
 
 function len(obj) {
   for (let w of ["size", "length"]) {
@@ -15,29 +15,26 @@ function len(obj) {
   return w
 }
 
+/**
+ * @type {import("discord.js").ChatInputApplicationCommandData}
+ */
 module.exports = {
   name: "setchannel",
   description: `Set your own bump channel.`,
-  userPermissions: ["MANAGE_MESSAGES"],
-  botPermissions: ["SEND_MESSAGES"],
+  userPermissions: [PermissionFlagsBits.ManageChannels],
+  botPermissions: [PermissionFlagsBits.SendMessages],
   category: "Configuration",
   cooldown: 3600,
   options: [
     {
       name: "channel",
       description: "the bump channel",
-      type: "CHANNEL",
-      channelTypes: [0], // Only allow text channels
+      type: ApplicationCommandOptionType.Channel,
+      channelTypes: [ChannelType.GuildText],
       required: true,
     },
   ],
 
-  /*
-   * @param {Client} w
-   * @param {Interaction} e
-   * @param {any} r
-   * @param {string} t
-  */
   async run(w, e, r, t) {
     try {
       return q.readFile("../../config/data.json", "utf8", function(err, data) {

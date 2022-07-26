@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const client = require("..");
 const ee = require("../config/embed.json");
 const { databasing } = require('../handlers/functions')
@@ -13,7 +13,7 @@ client.on("messageCreate", async (message) => {
   if (!mentionprefix.test(message.content)) return;
   const [, nprefix] = message.content.match(mentionprefix);
   if (nprefix.includes(client.user.id)) {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
     .setColor(ee.color)
     .setTitle(`${message.author.tag}`)
     .setURL("https://www.youtube.com/watch?v=xvFZjo5PgG0")
@@ -23,8 +23,8 @@ client.on("messageCreate", async (message) => {
   let args = message.content.slice(nprefix.length).trim().split(/ +/)
   let cmd = args.shift()?.toLowerCase()
   if(cmd === "rr"){
+    message.reply(`RESTARTING............`);
     process.exit()
-    message.reply(`RESTARTING............`)
   }
 });
 

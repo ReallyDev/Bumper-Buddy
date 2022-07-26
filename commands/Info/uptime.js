@@ -1,20 +1,19 @@
 const ee = require(`${process.cwd()}/config/embed.json`);
-const { MessageEmbed } = require("discord.js");
-const emoji = require(`${process.cwd()}/config/emoji.json`);
+const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 const ms = require('ms');
 
 module.exports = {
   name: "uptime",
   description: `Get the bot's uptime!`,
-  userPermissions: ["SEND_MESSAGES"],
-  botPermissions: ["SEND_MESSAGES"],
+  userPermissions: [PermissionFlagsBits.SendMessages],
+  botPermissions: [PermissionFlagsBits.SendMessages],
   category: "Information",
   cooldown: 10,
 
   run: async ({ client, interaction, args, prefix }) => {
     interaction.editReply({
       embeds: [
-        new MessageEmbed()
+        new EmbedBuilder()
           .setTitle('Uptime')
           .setColor(ee.color)
           .setDescription('```md\n'+ ms(client.uptime, { long: true }) +'\n```')

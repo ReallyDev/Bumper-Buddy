@@ -1,9 +1,12 @@
 const ee = require(`${process.cwd()}/config/embed.json`);
 const {
-  MessageEmbed,
-  MessageSelectMenu,
-  MessageActionRow,
-  MessageButton,
+  EmbedBuilder,
+  SelectMenuBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  InteractionType,
+  PermissionFlagsBits,
+  ApplicationCommandOptionType,
 } = require("discord.js");
 const emoji = require(`${process.cwd()}/config/emoji.json`);
 
@@ -14,18 +17,21 @@ const emo = {
   Config: emoji.setup,
 };
 
+/**
+ * @type {import("discord.js").ChatInputApplicationCommandData}
+ */
 module.exports = {
   name: "help",
   description: `Need some help? This is the command!`,
-  userPermissions: ["SEND_MESSAGES"],
-  botPermissions: ["SEND_MESSAGES"],
+  userPermissions: [PermissionFlagsBits.SendMessages],
+  botPermissions: [PermissionFlagsBits.SendMessages],
   category: "Information",
   cooldown: 10,
   options: [
     {
       name: "command",
       description: "name of the command",
-      type: "STRING",
+      type: ApplicationCommandOptionType.String,
       required: false,
     },
   ],
@@ -35,8 +41,8 @@ module.exports = {
       const commandopt = interaction.options.getString("command");
       const derescommand = await client.commands.get(commandopt);
       if (!commandopt) {
-        let raw = new MessageActionRow().addComponents([
-          new MessageSelectMenu()
+        let raw = new ActionRowBuilder().setComponents(
+          new SelectMenuBuilder()
             .setCustomId(`help-menu`)
             .setPlaceholder(`Click to see my all Category`)
             .addOptions([
@@ -49,33 +55,33 @@ module.exports = {
                 };
               }),
             ]),
-        ]);
+        );
 
-        let button_back = new MessageButton()
+        let button_back = new ButtonBuilder()
           .setStyle(`PRIMARY`)
           .setCustomId(`1`)
           .setEmoji(`◀️`);
-        let button_home = new MessageButton()
+        let button_home = new ButtonBuilder()
           .setStyle(`DANGER`)
           .setCustomId(`2`)
           .setEmoji(`🏠`);
-        let button_forward = new MessageButton()
+        let button_forward = new ButtonBuilder()
           .setStyle("PRIMARY")
           .setCustomId(`3`)
           .setEmoji("▶️");
-        let button_tutorial = new MessageButton()
+        let button_tutorial = new ButtonBuilder()
           .setStyle(`LINK`)
           .setEmoji(`993676536156786699`)
           .setLabel(`Invite`)
           .setURL(`https://discord.com/api/oauth2/authorize?client_id=854136307356794880&permissions=8&scope=bot+applications.commands`);
 
-        let buttonRow = new MessageActionRow().addComponents([
+        let buttonRow = new ActionRowBuilder().setComponents(
           button_back,
           button_home,
           button_forward,
           button_tutorial,
-        ]);
-        let embed = new MessageEmbed()
+        );
+        let embed = new EmbedBuilder()
           .setColor(ee.color)
           .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
           .addField(
@@ -92,18 +98,23 @@ module.exports = {
             components: [buttonRow, raw],
           })
           .then(async (mainmsg) => {
-            var embeds = [embed];
+            const embeds = [embed];
             for (const e of allotherembeds_eachcategory(true)) embeds.push(e);
             let currentPage = 0;
             let filter = (m) => m.user.id === interaction.user.id;
-            let collector = await mainmsg.createMessageComponentCollector({
+            let collector = mainmsg.createMessageComponentCollector({
               filter: filter,
               time: 3000 * 60,
             });
 
-            collector.on(`collect`, async (b) => {
+            collector.on(`collect`,
+            /**
+             * 
+             * @param {import("discord.js").Interaction} b 
+             */
+            async (b) => {
               try {
-                if (b.isButton()) {
+                if (b.type == InteractionType.ApplicationCommand && b.isButton()) {
                   await b.deferUpdate().catch((e) => {});
                   //page forward
                   if (b.customId == `1`) {
@@ -136,7 +147,7 @@ module.exports = {
                     .catch((e) => {});
                   b.deferUpdate().catch((e) => {});
                 }
-                if (b.isSelectMenu()) {
+                if (b.type == InteractionType.ApplicationCommand && b.isButton()) {
                   if (b.customId === `help-menu`) {
                     await b.deferUpdate().catch((e) => {});
                     let directory = b.values[0];
@@ -169,7 +180,7 @@ module.exports = {
           var embeds = [];
 
           // config embed
-          let Config_Embed = new MessageEmbed()
+          let Config_Embed = new EmbedBuilder()
             .setColor(ee.color)
             .setTitle(`Config Commands`)
             .setDescription(
@@ -195,7 +206,7 @@ module.exports = {
           embeds.push(Config_Embed);
 
           // filters embed
-          let Filters_Embed = new MessageEmbed()
+          let Filters_Embed = new EmbedBuilder()
             .setColor(ee.color)
             .setTitle(`Filters Commands`)
             .addField(`** How To Use ? **`, `>>> \`${prefix}filter <name>\``)
@@ -214,7 +225,7 @@ module.exports = {
           embeds.push(Filters_Embed);
 
           // info embed
-          let Information_Embed = new MessageEmbed()
+          let Information_Embed = new EmbedBuilder()
             .setColor(ee.color)
             .setTitle(`Information Commands`)
             .setDescription(
@@ -228,7 +239,7 @@ module.exports = {
             );
           embeds.push(Information_Embed);
           // music embed
-          let Music_Embed = new MessageEmbed()
+          let Music_Embed = new EmbedBuilder()
             .setColor(ee.color)
             .setTitle(`Category Commands`)
             .setDescription(
@@ -262,7 +273,7 @@ module.exports = {
           });
 
         if (derescommand) {
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
             .setColor(ee.color)
             .setTitle(
               `${emoji.SUCCESS} \`${derescommand.name}\` Command Info ${emoji.SUCCESS}`

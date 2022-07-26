@@ -32,7 +32,7 @@ client.on("interactionCreate", async (interaction) => {
     );
     
     // checking user perms
-    if (!interaction.member.permissions.has(cmd.userPermissions || [])) {
+    if (!interaction.memberPermissions.has(cmd.userPermissions || [])) {
       return client.embed(
         interaction,
         `You Don't Have \`${cmd.userPermissions}\` Permission to Use \`${cmd.name}\` Command!!`
