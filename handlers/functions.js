@@ -1,11 +1,7 @@
 const {
-  Interaction,
   Collection,
-  MessageActionRow,
-  MessageButton,
-  ButtonInteraction,
-  CommandInteraction,
-  Client,
+  ActionRowBuilder,
+  ButtonBuilder
 } = require("discord.js");
 const ee = require("../config/embed.json");
 const client = require("../index");
@@ -53,60 +49,60 @@ async function swap_pages(client, interaction, embeds) {
       .catch((e) => console.log("THIS IS TO PREVENT A CRASH"));
   } else {
     // first button disale
-    let firstdisable = new MessageActionRow().addComponents([
-      new MessageButton().setStyle("SECONDARY").setCustomId("0").setEmoji(`⏪`).setDisabled(true),
-      new MessageButton().setStyle("PRIMARY").setCustomId("1").setEmoji(`◀️`),
-      new MessageButton().setStyle("DANGER").setCustomId("2").setEmoji(`🗑`),
-      new MessageButton().setStyle("PRIMARY").setCustomId("3").setEmoji(`▶️`),
-      new MessageButton().setStyle("SECONDARY").setCustomId("4").setEmoji(`⏩`),
-    ]);
+    let firstdisable = new ActionRowBuilder().setComponents(
+      new ButtonBuilder().setStyle("SECONDARY").setCustomId("0").setEmoji(`⏪`).setDisabled(true),
+      new ButtonBuilder().setStyle("PRIMARY").setCustomId("1").setEmoji(`◀️`),
+      new ButtonBuilder().setStyle("DANGER").setCustomId("2").setEmoji(`🗑`),
+      new ButtonBuilder().setStyle("PRIMARY").setCustomId("3").setEmoji(`▶️`),
+      new ButtonBuilder().setStyle("SECONDARY").setCustomId("4").setEmoji(`⏩`),
+    );
     // all disabled
-    let alldisabled = new MessageActionRow().addComponents([
-      new MessageButton()
+    let alldisabled = new ActionRowBuilder().setComponents(
+      new ButtonBuilder()
         .setStyle("SECONDARY")
         .setCustomId("0")
         .setEmoji(`⏪`)
         .setDisabled(true),
-      new MessageButton()
+      new ButtonBuilder()
         .setStyle("PRIMARY")
         .setCustomId("1")
         .setEmoji(`◀️`)
         .setDisabled(true),
-      new MessageButton()
+      new ButtonBuilder()
         .setStyle("DANGER")
         .setCustomId("2")
         .setEmoji(`🗑`)
         .setDisabled(true),
-      new MessageButton()
+      new ButtonBuilder()
         .setStyle("PRIMARY")
         .setCustomId("3")
         .setEmoji(`▶️`)
         .setDisabled(true),
-      new MessageButton()
+      new ButtonBuilder()
         .setStyle("SECONDARY")
         .setCustomId("4")
         .setEmoji(`⏩`)
         .setDisabled(true),
-    ]);
+    );
     // second buttons disable
-    let lastdisable = new MessageActionRow().addComponents([
-      new MessageButton().setStyle("SECONDARY").setCustomId("0").setEmoji(`⏪`),
-      new MessageButton().setStyle("PRIMARY").setCustomId("1").setEmoji(`◀️`),
-      new MessageButton().setStyle("DANGER").setCustomId("2").setEmoji(`🗑`),
-      new MessageButton().setStyle("PRIMARY").setCustomId("3").setEmoji(`▶️`),
-      new MessageButton()
+    let lastdisable = new ActionRowBuilder().setComponents(
+      new ButtonBuilder().setStyle("SECONDARY").setCustomId("0").setEmoji(`⏪`),
+      new ButtonBuilder().setStyle("PRIMARY").setCustomId("1").setEmoji(`◀️`),
+      new ButtonBuilder().setStyle("DANGER").setCustomId("2").setEmoji(`🗑`),
+      new ButtonBuilder().setStyle("PRIMARY").setCustomId("3").setEmoji(`▶️`),
+      new ButtonBuilder()
         .setStyle("SECONDARY")
         .setCustomId("4")
         .setEmoji(`⏩`)
         .setDisabled(true),
-    ]);
-    let allbuttons = new MessageActionRow().addComponents([
-      new MessageButton().setStyle("SECONDARY").setCustomId("0").setEmoji(`⏪`),
-      new MessageButton().setStyle("PRIMARY").setCustomId("1").setEmoji(`◀️`),
-      new MessageButton().setStyle("DANGER").setCustomId("2").setEmoji(`🗑`),
-      new MessageButton().setStyle("PRIMARY").setCustomId("3").setEmoji(`▶️`),
-      new MessageButton().setStyle("SECONDARY").setCustomId("4").setEmoji(`⏩`),
-    ]);
+    );
+    let allbuttons = new ActionRowBuilder().setComponents(
+      new ButtonBuilder().setStyle("SECONDARY").setCustomId("0").setEmoji(`⏪`),
+      new ButtonBuilder().setStyle("PRIMARY").setCustomId("1").setEmoji(`◀️`),
+      new ButtonBuilder().setStyle("DANGER").setCustomId("2").setEmoji(`🗑`),
+      new ButtonBuilder().setStyle("PRIMARY").setCustomId("3").setEmoji(`▶️`),
+      new ButtonBuilder().setStyle("SECONDARY").setCustomId("4").setEmoji(`⏩`),
+    );
     console.log(embeds.length);
     //Send message with buttons
     let swapmsg = await interaction.followUp({
@@ -119,36 +115,36 @@ async function swap_pages(client, interaction, embeds) {
     });
     collector.on("collect", async (b) => {
       if (b.isButton()) {
-        await b.deferUpdate().catch((e) => {});
+        await b.deferUpdate().catch((e) => { });
         // page first
         if (b.customId == "0") {
-          await b.deferUpdate().catch((e) => {});
+          await b.deferUpdate().catch((e) => { });
           if (currentPage !== 0) {
             currentPage = 0;
             await swapmsg.edit({
               embeds: [embeds[currentPage]],
               components: [firstdisable],
             });
-            await b.deferUpdate().catch((e) => {});
+            await b.deferUpdate().catch((e) => { });
           }
         }
         //page forward
         if (b.customId == "1") {
-          await b.deferUpdate().catch((e) => {});
+          await b.deferUpdate().catch((e) => { });
           if (currentPage !== 0) {
             currentPage -= 1;
             await swapmsg.edit({
               embeds: [embeds[currentPage]],
               components: [allbuttons],
             });
-            await b.deferUpdate().catch((e) => {});
+            await b.deferUpdate().catch((e) => { });
           } else {
             currentPage = embeds.length - 1;
             await swapmsg.edit({
               embeds: [embeds[currentPage]],
               components: [allbuttons],
             });
-            await b.deferUpdate().catch((e) => {});
+            await b.deferUpdate().catch((e) => { });
           }
         }
         //go home
@@ -158,7 +154,7 @@ async function swap_pages(client, interaction, embeds) {
               embeds: [embeds[currentPage]],
               components: [alldisabled],
             });
-          } catch (e) {}
+          } catch (e) { }
         }
         //go forward
         else if (b.customId == "3") {

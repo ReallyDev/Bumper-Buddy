@@ -1,10 +1,4 @@
-  const {
-  Client,
-  MessageActionRow,
-  MessageButton,
-  MessageEmbed,
-  Guild,
-} = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const fs = require("fs");
 const chalk = require("chalk");
 const ee = require("../config/embed.json");
@@ -64,7 +58,7 @@ module.exports = async (client) => {
   client.embed = (interaction, data) => {
     return interaction.followUp({
       embeds: [
-        new MessageEmbed()
+        new EmbedBuilder()
           .setColor(ee.color)
           .setTitle(data.substr(0, 2000))
           .setFooter({

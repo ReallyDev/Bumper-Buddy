@@ -1,4 +1,3 @@
-const { Client } = require("discord.js");
 const fs = require("fs");
 const chalk = require("chalk");
 

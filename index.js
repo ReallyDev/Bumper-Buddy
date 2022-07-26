@@ -1,4 +1,4 @@
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 const fs = require('fs');
 const chalk = require('chalk');
 const client = new Client({
@@ -13,21 +13,21 @@ const client = new Client({
     parse: ["roles", "users", "everyone"],
     repliedUser: true,
   },
-  partials: ["MESSAGE", "CHANNEL", "REACTION"],
+  partials: [Partials.Message, Partials.Channel, Partials.Reaction],
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-    //Intents.FLAGS.GUILD_INTEGRATIONS,
-    //Intents.FLAGS.GUILD_WEBHOOKS,
-    //Intents.FLAGS.GUILD_INVITES,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-    //Intents.FLAGS.GUILD_PRESENCES,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    //Intents.FLAGS.GUILD_MESSAGE_TYPING,
-    // Intents.FLAGS.DIRECT_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.DirectMessageReactions,
+    //GatewayIntentBits.GuildIntegrations,
+    //GatewayIntentBits.GuildWebhooks,
+    //GatewayIntentBits.GuildInvites,
+    //GatewayIntentBits.GuildPresences,
+    //GatewayIntentBits.GuildMessageTyping,
+    //GatewayIntentBits.DirectMessages,
   ],
 });
 module.exports = client;

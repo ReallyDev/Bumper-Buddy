@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, InteractionType } = require("discord.js");
 const client = require("..");
 const { cooldown, databasing } = require("../handlers/functions")
 var ee = require("../config/embed.json");
@@ -6,10 +6,10 @@ var ee = require("../config/embed.json");
 client.on("interactionCreate", async (interaction) => {
   await databasing(interaction.guild.id, interaction.member.id);
   // Slash Command Handling
-  if (interaction.isCommand()) {
+  if (interaction.type == InteractionType.ApplicationCommand && interaction.isChatInputCommand()) {
     await interaction
-      .deferReply() // I removed redundant { ephemeral: false }
-      .catch((e) => {});
+      .deferReply()
+      .catch(() => {});
     let prefix = "/";
     const cmd = client.commands.get(interaction.commandName);
     if (!cmd) return interaction.editReply("An error has occured");
