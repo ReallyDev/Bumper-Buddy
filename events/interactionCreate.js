@@ -1,7 +1,6 @@
-const { EmbedBuilder, InteractionType } = require("discord.js");
+const { InteractionType, ApplicationCommandOptionType } = require("discord.js");
 const client = require("..");
-const { cooldown, databasing } = require("../handlers/functions")
-var ee = require("../config/embed.json");
+const { cooldown, databasing } = require("../handlers/functions");
 
 client.on("interactionCreate", async (interaction) => {
   await databasing(interaction.guild.id, interaction.member.id);
@@ -17,13 +16,17 @@ client.on("interactionCreate", async (interaction) => {
     const args = [];
 
     for (let option of interaction.options.data) {
-      if (option.type === "SUB_COMMAND") {
+      if (option.type === ApplicationCommandOptionType.Subcommand) {
         if (option.name) args.push(option.name);
+        
         option.options?.forEach((x) => {
           if (x.value) args.push(x.value);
         });
-      } else if (option.value) args.push(option.value);
+      } else if (option.value) {
+        args.push(option.value);
+      }
     }
+
     interaction.member = interaction.guild.members.cache.get(
       interaction.user.id
     );
@@ -57,7 +60,7 @@ client.on("interactionCreate", async (interaction) => {
 }
 
   // Context Menu Handling
-  if (interaction.isContextMenu()) {
+  if (interaction.type === InteractionType.ApplicationCommand && interaction.isContextMenuCommand()) {
     await interaction.deferReply();
     const command = client.commands.get(interaction.commandName);
     if (command) command.run(client, interaction);
